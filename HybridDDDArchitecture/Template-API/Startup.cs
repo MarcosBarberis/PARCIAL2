@@ -26,10 +26,10 @@ namespace API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hybrid Architecture Project", Version = "v1" });
             });
-            services.AddMvc().AddMvcOptions(options =>
-            {
-                options.Filters.Add<BaseExceptionFilter>();
-            });
+            //services.AddMvc().AddMvcOptions(options =>
+            //{
+            //    options.Filters.Add<BaseExceptionFilter>();
+            //});
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin", builder => builder
@@ -42,13 +42,19 @@ namespace API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hybrid Architecture Project v1");
+                c.RoutePrefix = "swagger"; // navega a /swagger
+            });
+
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
             if (env.IsDevelopment())
             {
+
                 app.UseDeveloperExceptionPage();
 
-                app.UseSwagger();
-                app.UseSwaggerUI();
             }
 
             CustomMapper.Instance = app.ApplicationServices.GetRequiredService<IMapper>();
@@ -56,9 +62,9 @@ namespace API
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("AllowSpecificOrigin");
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseAuthorization();
-            UseEventBus(app);
+            //UseEventBus(app);
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
