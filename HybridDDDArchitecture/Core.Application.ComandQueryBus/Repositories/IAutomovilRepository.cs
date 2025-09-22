@@ -14,5 +14,7 @@ namespace Core.Application.ComandQueryBus.Repositories
         Task<bool> ExistsByNumeroMotorAsync(string numeroMotor, CancellationToken ct = default);
         Task<bool> ExistsByNumeroChasisAsync(string numeroChasis, CancellationToken ct = default);
         Task<int> SaveChangesAsync(CancellationToken ct = default);
+        Task<Automovil?> FindByIdAsync(int id);
+        void Remove(Automovil entity);
     }
 }

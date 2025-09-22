@@ -24,6 +24,8 @@ namespace Application.Registrations
             // ✅ Nuestro handler para el POST /api/v1/automovil
             services.AddScoped<CreateAutomovilHandler>();
 
+            services.AddScoped<DeleteAutomovilHandler>();
+
             return services;
         }
     }
