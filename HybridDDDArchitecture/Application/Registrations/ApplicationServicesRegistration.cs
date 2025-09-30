@@ -1,45 +1,31 @@
-﻿using Application.ApplicationServices;
-using Core.Application;
+﻿using Core.Application.ComandQueryBus.Handlers.Automovil;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Application.Registrations
 {
     /// <summary>
-    /// Aqui se deben registrar todas las dependencias de la capa de aplicacion
+    /// Registros mínimos de la capa de aplicación para el CRUD de Automóvil.
     /// </summary>
     public static class ApplicationServicesRegistration
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            /* Automapper */
-            services.AddAutoMapper(config => config.AddMaps(Assembly.GetExecutingAssembly()));
+            // (Opcional) AutoMapper si tu template lo requiere en otros lugares
+            services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
 
-            /* EventBus */
-            services.AddPublishers();
-            services.AddSubscribers();
+            // ❌ QUITADO: MediatR + CommandQueryBus + DummyEntity/EventBus
+            // services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            // services.AddScoped<ICommandQueryBus, MediatrCommandQueryBus>();
+            // services.AddScoped<IDummyEntityApplicationService, DummyEntityApplicationService>();
+            // services.AddPublishers();
+            // services.AddSubscribers();
 
-            /* MediatR*/
-            services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            services.AddScoped<ICommandQueryBus, MediatrCommandQueryBus>();
+            // ✅ Nuestro handler para el POST /api/v1/automovil
+            services.AddScoped<CreateAutomovilHandler>();
 
-            /* Application Services */
-            services.AddScoped<IDummyEntityApplicationService, DummyEntityApplicationService>();
+            services.AddScoped<DeleteAutomovilHandler>();
 
-            return services;
-        }
-
-        private static IServiceCollection AddPublishers(this IServiceCollection services)
-        {
-            //Aqui se registran los handlers que publican en el bus de eventos
-            services.AddTransient<IIntegrationEventHandler<DummyEntityCreatedIntegrationEvent>, DummyEntityCreatedIntegrationEventHandlerPub>();
-            return services;
-        }
-
-        private static IServiceCollection AddSubscribers(this IServiceCollection services)
-        {
-            //Aqui se registran los handlers que se suscriben al bus de eventos
-            services.AddTransient<DummyEntityCreatedIntegrationEventHandlerSub>();
             return services;
         }
     }
