@@ -5,6 +5,9 @@ using Core.Application;
 using Filters;
 using Infrastructure.Registrations;
 using Microsoft.OpenApi.Models;
+using Core.Application.ComandQueryBus.Repositories;
+using Core.Application.ComandQueryBus.Handlers.Automovil;
+using Core.Infrastructure.Repositories.Sql;
 
 namespace API
 {
