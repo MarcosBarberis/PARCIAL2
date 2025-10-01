@@ -20,7 +20,8 @@ namespace Application.Registrations
             services.AddScoped<GetAutomovilByIdHandler>();
             services.AddScoped<GetAutomovilesHandler>();
             services.AddScoped<DeleteAutomovilHandler>();
-          
+            services.AddScoped<GetAutomovilByChasisHandler>();
+
             return services;
         }
     }
