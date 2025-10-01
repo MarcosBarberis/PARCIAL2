@@ -78,5 +78,7 @@ namespace Core.Infrastructure.Repositories.Sql
             _ctx.SaveChangesAsync(ct);
 
         public void Remove(Automovil entity) => _ctx.Automoviles.Remove(entity);
+        public Task<Automovil?> FindByChasisAsync(string numeroChasis, CancellationToken ct = default) =>
+           _ctx.Automoviles.FirstOrDefaultAsync(a => a.NumeroChasis == numeroChasis, ct);
     }
 }

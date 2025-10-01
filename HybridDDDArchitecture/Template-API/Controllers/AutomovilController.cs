@@ -15,19 +15,22 @@ namespace API.Controllers
         private readonly GetAutomovilByIdHandler _getById;
         private readonly GetAutomovilesHandler _getList;
         private readonly DeleteAutomovilHandler _delete;
+        private readonly GetAutomovilByChasisHandler _getByChasis;
 
         public AutomovilController(
             CreateAutomovilHandler create,
             UpdateAutomovilHandler update,
             GetAutomovilByIdHandler getById,
             GetAutomovilesHandler getList,
-            DeleteAutomovilHandler delete)
+            DeleteAutomovilHandler delete,
+            GetAutomovilByChasisHandler getByChasis)
         {
             _create = create;
             _update = update;
             _getById = getById;
             _getList = getList;
             _delete = delete;
+            _getByChasis = getByChasis;
         }
 
         // POST /api/v1/automovil
@@ -99,6 +102,22 @@ namespace API.Controllers
             return ok
                 ? Ok(new { message = $"Automóvil {id} eliminado correctamente." })
                 : NotFound(new { message = $"No existe un automóvil con id {id}." });
+        }
+        /// <summary>Obtiene un automóvil por número de chasis.</summary>
+        /// <remarks>Ruta: /api/v1/automovil/chasis/{numeroChasis}</remarks>
+        [HttpGet("chasis/{numeroChasis}")]
+        [ProducesResponseType(typeof(AutomovilDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetByChasis([FromRoute] string numeroChasis, CancellationToken ct = default)
+        {
+            try
+            {
+                var dto = await _getByChasis.HandleAsync(numeroChasis, ct);
+                return Ok(dto);
+            }
+            catch (KeyNotFoundException ex) { return NotFound(new { message = ex.Message }); }
+            catch (ArgumentNullException ex) { return BadRequest(new { message = $"Campo requerido: {ex.ParamName}" }); }
         }
     }
 }
