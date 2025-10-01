@@ -31,6 +31,7 @@ namespace Core.Application.ComandQueryBus.Repositories // deja este namespace si
         Task<bool> ExistsByNumeroChasisAsync(string numeroChasis, CancellationToken ct = default);
 
         Task<int> SaveChangesAsync(CancellationToken ct = default);
+     
         void Remove(Automovil entity);
     }
 }

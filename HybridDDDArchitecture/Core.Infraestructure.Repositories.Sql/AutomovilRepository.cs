@@ -68,7 +68,7 @@ namespace Core.Infrastructure.Repositories.Sql
         }
 
         // ====== Utilidades ======
-        public Task<bool> ExistsByNumeroMotorAsync(string numeroMotor, CancellationToken ct = default) =>
+       public Task<bool> ExistsByNumeroMotorAsync(string numeroMotor, CancellationToken ct = default) =>
             _ctx.Automoviles.AnyAsync(a => a.NumeroMotor == numeroMotor, ct);
 
         public Task<bool> ExistsByNumeroChasisAsync(string numeroChasis, CancellationToken ct = default) =>

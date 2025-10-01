@@ -1,4 +1,4 @@
-﻿using Core.Application.ComandQueryBus.DTOs.Automovil;
+using Core.Application.ComandQueryBus.DTOs.Automovil;
 using Core.Application.ComandQueryBus.DTOs.Shared;
 using Core.Application.ComandQueryBus.Handlers.Automovil;
 using Microsoft.AspNetCore.Mvc;
@@ -44,8 +44,8 @@ namespace API.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
             }
             catch (InvalidOperationException ex) { return Conflict(new { message = ex.Message }); }
-            catch (ArgumentNullException ex) { return BadRequest(new { message = $"Campo requerido: {ex.ParamName}" }); }
-            catch (DbUpdateException ex) { return Conflict(new { message = "Conflicto al guardar en BD.", detail = ex.InnerException?.Message ?? ex.Message }); }
+            catch (ArgumentNullException ex)     { return BadRequest(new { message = $"Campo requerido: {ex.ParamName}" }); }
+            catch (DbUpdateException ex)         { return Conflict(new { message = "Conflicto al guardar en BD.", detail = ex.InnerException?.Message ?? ex.Message }); }
         }
 
         // GET /api/v1/automovil?search=&page=&pageSize=
@@ -81,9 +81,12 @@ namespace API.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] UpdateAutomovilDto dto, CancellationToken ct)
         {
             if (id != dto.Id) return BadRequest("El id de la ruta no coincide con el del cuerpo.");
-            var updated = await _update.HandleAsync(id, dto, ct); // si tu handler devuelve bool, usa var ok = ...
+
+            // Tu handler devuelve la entidad actualizada (o null si no existe)
+            var updated = await _update.HandleAsync(id, dto, ct);
             if (updated is null) return NotFound();
-            return NoContent(); // o Ok(updated) si querés devolver el recurso
+
+            return NoContent(); // (o Ok(updated) si querés devolverla)
         }
 
         // DELETE /api/v1/automovil/{id}
@@ -93,8 +96,9 @@ namespace API.Controllers
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
             var ok = await _delete.HandleAsync(id, ct);
-            return ok ? Ok(new { message = $"Automóvil {id} eliminado correctamente." })
-                      : NotFound(new { message = $"No existe un automóvil con id {id}." });
+            return ok
+                ? Ok(new { message = $"Automóvil {id} eliminado correctamente." })
+                : NotFound(new { message = $"No existe un automóvil con id {id}." });
         }
     }
 }

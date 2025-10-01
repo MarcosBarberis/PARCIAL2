@@ -15,10 +15,12 @@ namespace Application.Registrations
             services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
 
             services.AddScoped<CreateAutomovilHandler>();
+            services.AddScoped<CreateAutomovilHandler>();
             services.AddScoped<UpdateAutomovilHandler>();
             services.AddScoped<GetAutomovilByIdHandler>();
             services.AddScoped<GetAutomovilesHandler>();
             services.AddScoped<DeleteAutomovilHandler>();
+          
             return services;
         }
     }
